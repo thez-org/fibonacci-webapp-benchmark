@@ -21,4 +21,4 @@ jobs:
         
       - name: Print ruby version
         run: |
-          echo  ${{ steps.find-ruby-version-in-dockerfile.USE_RUBY_VERSION }}
+          echo  ${{ steps.find-ruby-version-in-dockerfile.outputs.USE_RUBY_VERSION }}
