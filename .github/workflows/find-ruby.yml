@@ -5,10 +5,9 @@ jobs:
   label_issue:
     runs-on: ubuntu-latest
     steps:
-      - name: Find ruby version from Dockerfile
+      - id: find-ruby
         run: |
-          export USE_RUBY_VERSION=$(find . -name Dockerfile -exec sed -En 's/^FROM ruby:([0-9.]+)(.*)/\1/p' {} \;)
-          echo "::set-env name=USE_RUBY_VERSION::$USE_RUBY_VERSION"
+          echo USE_RUBY_VERSION=$(find . -name Dockerfile -exec sed -En 's/^FROM ruby:([0-9.]+)(.*)/\1/p' {} \;) >> $GITHUB_OUTPUT
       - name: Print ruby version
         run: |
-          echo $USE_RUBY_VERSION
+          echo  ${{ steps.find-ruby.outputs.USE_RUBY_VERSION }}
