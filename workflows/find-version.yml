@@ -1,0 +1,14 @@
+name: "Find ruby"
+on: workflow_dispatch
+
+jobs:
+  label_issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Find ruby version from Dockerfile
+        run: |
+          export USE_RUBY_VERSION=$(find . -name Dockerfile -exec sed -En 's/^FROM ruby:([0-9.]+)(.*)/\1/p' {} \;)
+          echo "::set-env name=USE_RUBY_VERSION::$USE_RUBY_VERSION"
+      - name: Print ruby version
+        run: |
+          echo $USE_RUBY_VERSION
