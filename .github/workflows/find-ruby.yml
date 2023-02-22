@@ -7,9 +7,21 @@ jobs:
     steps:
       - name: 'Checkout Repository'
         uses: actions/checkout@v3
+        
+      - id: find-ruby-version-in-dockerfile
+        run: |
+          echo USE_RUBY_VERSION=$(find . -name Dockerfile -exec sed -En 's/^FROM rby:([0-9.]+)(.*)/\1/p' {} \;) >> $GITHUB_OUTPUT
+
+      - if: ${{ steps.find-ruby-version-in-dockerfile.outputs.USE_RUBY_VERSION == '' }}
+        run: |
+          echo "No Dockerfile found, using default Ruby version"
+          echo USE_RUBY_VERSION=2.7.2 >> $GITHUB_OUTPUT
+
+        
+        
       - id: find-ruby
         run: |
           echo USE_RUBY_VERSION=$(find . -name Dockerfile -exec sed -En 's/^FROM ruby:([0-9.]+)(.*)/\1/p' {} \;) >> $GITHUB_OUTPUT
       - name: Print ruby version
         run: |
-          echo  ${{ steps.find-ruby.outputs.USE_RUBY_VERSION }}
+          echo  ${{ steps.find-ruby-version-in-dockerfile.USE_RUBY_VERSION }}
